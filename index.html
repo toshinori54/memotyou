@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myMemoPad中級</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+
+<body>
+    <header>
+        <h1>小遣いメモ</h1>
+    </header>
+
+    <main>
+        <div>
+            <p>チャージ</p>
+            <input id="charge">
+            <p>使用額計</p>
+            <input id="sum_price">
+        </div>
+
+
+
+        <table class="main_list" align="center">
+            <tr>
+                <th>曜日</th>
+                <th colspan="2">金額</th>
+            </tr>
+            <!-- 月曜日 -->
+            <tr>
+                <th>月</th>
+                <td><input type="text" id="input_m">円</td>
+            </tr>
+            <!-- 火曜日 -->
+            <tr>
+                <th>火</th>
+                <td><input type="text" id="input_t">円</td>
+            </tr>
+            <!-- 水曜日 -->
+            <tr>
+                <th>水</th>
+                <td><input type="text" id="input_w">円</td>
+            </tr>
+            <!-- 木曜日 -->
+            <tr>
+                <th>木</th>
+                <td><input type="text" id="input_th">円</td>
+            </tr>
+            <!-- 金曜日 -->
+            <tr>
+                <th>金</th>
+                <td><input type="text" id="input_f">円</td>
+            </tr>
+
+
+        </table>
+
+        <!-- 各曜日に入力を指定
+        <input type="text" id="input_m">
+        <textarea id="text_area"></textarea> -->
+        <div>
+            <ul>
+                <li id="save">save</li>
+                <li id="clear">clear</li>
+            </ul>
+        </div>
+    </main>
+
+
+    <!-- <footer>
+        <small>G's</small>
+    </footer> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            //１．saveクリックイベント
+            $("#save").on("click", function () {
+                // console.log(12345)
+                var charge = $("#charge").val();
+                var title_m = $("#input_m").val();
+                var title_t = $("#input_t").val();
+                var title_w = $("#input_w").val();
+                var title_th = $("#input_th").val();
+                var title_f = $("#input_f").val();
+                // var text = $("#text_area").val();
+                // objの中身を指定
+                var obj = {
+                    "charge": charge,
+                    "title_m": title_m,
+                    "title_t": title_t,
+                    "title_w": title_w,
+                    "title_th": title_th,
+                    "title_f": title_f
+                    // "text": text
+                };
+                var json = JSON.stringify(obj);
+                localStorage.setItem("memo02", json);
+            });
+
+
+            //2．CLEARクリックイベント
+            $("#clear").on("click", function () {
+                localStorage.removeItem("memo02");
+                $("#charge").val("");
+                $("#input_m").val("");
+                $("#input_t").val("");
+                $("#input_w").val("");
+                $("#input_th").val("");
+                $("#input_f").val("");
+                // $("#text_area").val("");
+            });
+
+            //３．ページ読み込み：保存データ取得表示
+            if (localStorage.getItem("memo02")) {// 値が保存されていれば
+                var json_get = localStorage.getItem("memo02");// データを取得
+                var obj_get = JSON.parse(json_get);
+                $("#charge").val(obj_get.charge);
+                $("#input_m").val(obj_get.title_m);
+                $("#input_t").val(obj_get.title_t);
+                $("#input_w").val(obj_get.title_w);
+                $("#input_th").val(obj_get.title_th);
+                $("#input_f").val(obj_get.title_f);
+
+                // $("#text_area").val(obj_get.text);
+
+            }
+
+            // ４．残高表示　チャージマイナス各曜日合計
+            $("#main_list").on('input', '.input_m', '.input_t', '.input_w', '.input_th', '.input_f', function () {
+                var calculated_total_sum = 0;
+
+                $("#main_list .input").each(function () {
+                    var get_textbox_value = $(this).val();
+                    if ($.isNumeric(get_textbox_value)) {
+                        calculated_total_sum += parseFloat(get_textbox_value);
+                    }
+                });
+                $("#sum_price").html(calculated_total_sum);
+            });
+
+
+            //   5．合計の出し方その２
+            // const number1 = "input_m"
+            // const number2 = "input_t"
+            // const number3 = "input_w"
+            // const number4 = "input_th"
+            // const number5 = "input_f"
+            // const sum = number1 + number2 + number3 + number4 + number5
+
+
+
+
+        });
+
+
+
+
+    </script>
+
+</body>
+
+</html>
